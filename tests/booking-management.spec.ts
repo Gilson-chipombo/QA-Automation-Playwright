@@ -1,47 +1,5 @@
-import { expect, test as base } from '@playwright/test';
-import { AuthApi } from '../src/clients/AuthApi';
-import { Booking, BookingApi } from '../src/clients/BookingAPI';
-import { createBookingData } from '../src/data/bookingFactory';
-
-type BookingFixture = {
-    api: BookingApi;
-    booking: Booking;
-    bookingId: number;
-    token: string;
-    deleted: boolean;
-};
-
-const test = base.extend<{ bookingFixture: BookingFixture }>({
-    bookingFixture: async ({ request }, use) => {
-        const api = new BookingApi(request);
-        const token = await new AuthApi(request).createToken('admin', 'password123');
-        const booking = createBookingData();
-        booking.firstname = `Playwright-${Date.now()}`;
-
-        const response = await api.createBooking(booking);
-        expect(response.status()).toBe(200);
-
-        const created = await response.json();
-        expect(Number.isInteger(created.bookingid)).toBe(true);
-
-        const fixture: BookingFixture = {
-            api,
-            booking,
-            bookingId: created.bookingid,
-            token,
-            deleted: false,
-        };
-
-        try {
-            await use(fixture);
-        } finally {
-            if (!fixture.deleted) {
-                const deleteResponse = await api.deleteBooking(fixture.bookingId, fixture.token);
-                expect(deleteResponse.status()).toBe(201);
-            }
-        }
-    },
-});
+import { Booking } from '../src/clients/BookingAPI';
+import { expect, test } from '../src/fixtures';
 
 test('deve listar reservas filtrando pelo primeiro nome', async ({ bookingFixture }) => {
     const response = await bookingFixture.api.getBookingIds({
@@ -96,13 +54,9 @@ test('deve atualizar parcialmente uma reserva sem alterar os restantes dados', a
 });
 
 test('deve eliminar uma reserva e deixar de a consultar', async ({ bookingFixture }) => {
-    const deleteResponse = await bookingFixture.api.deleteBooking(
-        bookingFixture.bookingId,
-        bookingFixture.token,
-    );
+    const deleteResponse = await bookingFixture.delete();
 
     expect(deleteResponse.status()).toBe(201);
-    bookingFixture.deleted = true;
 
     const getResponse = await bookingFixture.api.getBooking(bookingFixture.bookingId);
     expect(getResponse.status()).toBe(404);

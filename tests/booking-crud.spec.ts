@@ -1,25 +1,13 @@
-import { BookingApi } from "../src/clients/BookingAPI";
-import {expect, test} from '@playwright/test'
-import { createBookingData } from "../src/data/bookingFactory";
+import { expect, test } from '../src/fixtures';
 
-test('deve criar e consultar uma reserva', async({ request })=>{
-    
-    const bookingApi = new BookingApi(request);
-    const bookingData = createBookingData();
+test('deve criar e consultar uma reserva', async ({ bookingApi, bookingFixture }) => {
+    const bookingData = bookingFixture.booking;
 
-    const response = await bookingApi.createBooking(bookingData);
+    const response = await bookingApi.getBooking(bookingFixture.bookingId);
 
     expect(response.status()).toBe(200);
-
-    const created = await response.json();
-    expect(created.bookingid).toBeTruthy();
-
-    const getResponse = await bookingApi.getBooking(created.bookingid);
-    
-    expect(getResponse.status()).toBe(200)
-
-    const booking = await getResponse.json();
+    const booking = await response.json();
 
     expect(booking.firstname).toBe(bookingData.firstname);
-    expect(booking.lastname).toBe(bookingData.lastname)
+    expect(booking.lastname).toBe(bookingData.lastname);
 });

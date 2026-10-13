@@ -30,7 +30,8 @@ QA-Automation-Playwright/
 ├── tests/
 │   ├── auth.spec.ts
 │   ├── booking-crud.spec.ts
-│   └── booking-management.spec.ts
+│   ├── booking-management.spec.ts
+│   └── fixtures.ts
 ├── tsconfig.json
 └── README.md
 ```
@@ -96,7 +97,8 @@ O projeto foi organizado para separar:
 
 - clientes da API em `src/clients`
 - dados mockados e builders em `src/data`
-- testes em `tests/`
+- fixtures partilhadas e limpeza dos dados de teste em `tests/fixtures.ts`
+- cenários em `tests/`
 - configuração global em `playwright.config.ts`
 
 Este padrão facilita manutenção, reutilização e expansão dos testes.

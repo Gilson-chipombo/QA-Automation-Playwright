@@ -1,9 +1,6 @@
-import { expect, test } from '@playwright/test';
-import { AuthApi } from '../src/clients/AuthApi';
+import { expect, test } from '../src/fixtures';
 
-test('deve gerar um token com credenciais válidas', async ({ request }) => {
-    const authApi = new AuthApi(request);
-
+test('deve gerar um token com credenciais válidas', async ({ authApi }) => {
     const token = await authApi.createToken('admin', 'password123');
 
     expect(token).toBeTruthy();
