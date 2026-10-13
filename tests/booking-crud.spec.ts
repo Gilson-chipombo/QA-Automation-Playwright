@@ -9,7 +9,7 @@ test('deve criar e consultar uma reserva', async({ request })=>{
 
     const response = await bookingApi.createBooking(bookingData);
 
-    expect(response.status).toBe(200);
+    expect(response.status()).toBe(200);
 
     const created = await response.json();
     expect(created.bookingid).toBeTruthy();

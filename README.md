@@ -29,7 +29,8 @@ QA-Automation-Playwright/
 │       └── bookingFactory.ts
 ├── tests/
 │   ├── auth.spec.ts
-│   └── booking-crud.spec.ts
+│   ├── booking-crud.spec.ts
+│   └── booking-management.spec.ts
 ├── tsconfig.json
 └── README.md
 ```
@@ -78,10 +79,16 @@ npm run test:report
 
 ## Casos cobertos
 
-- Autenticação de usuário
-- Criação de reserva
-- Consulta de reserva
-- Estrutura de dados de reserva reutilizável via factory
+- Criação e consulta de reservas
+- Pesquisa de reservas por primeiro nome
+- Autenticação válida e rejeição de credenciais inválidas
+- Substituição completa (PUT) e atualização parcial (PATCH) de reservas
+- Eliminação de reservas e confirmação de que deixaram de estar disponíveis
+- Estrutura reutilizável de dados de reserva via factory
+
+Os testes de atualização e eliminação usam as credenciais de demonstração do
+Restful Booker (`admin` / `password123`) e removem as reservas criadas durante
+a execução.
 
 ## Observações
 
