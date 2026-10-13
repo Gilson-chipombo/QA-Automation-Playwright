@@ -54,9 +54,15 @@ Crie um arquivo `.env` na raiz do projeto baseado no `.env.example` e configure 
 
 ```env
 BASE_URL=https://restful-booker.herokuapp.com
+AUTH_USERNAME=admin
+AUTH_PASSWORD=password123
 ```
 
 A configuração do Playwright usa `dotenv` para carregar essas variáveis automaticamente.
+Se `BASE_URL` não estiver definida no CI, é usado o endereço público do Restful Booker.
+As credenciais são lidas de `AUTH_USERNAME` e `AUTH_PASSWORD`; no GitHub Actions,
+configura-as como secrets. Para o ambiente de demonstração, os valores por omissão
+são `admin` e `password123`.
 
 ## Execução dos testes
 

@@ -1,7 +1,7 @@
 import { expect, test } from '../src/fixtures';
 
-test('deve gerar um token com credenciais válidas', async ({ authApi }) => {
-    const token = await authApi.createToken('admin', 'password123');
+test('deve gerar um token com credenciais válidas', async ({ authApi, authCredentials }) => {
+    const token = await authApi.createToken(authCredentials.username, authCredentials.password);
 
     expect(token).toBeTruthy();
 });

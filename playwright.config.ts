@@ -14,7 +14,7 @@ export default defineConfig({
     ['html', { open: 'never' }]
   ],
   use: {
-    baseURL: env.BASE_URL,
+    baseURL: env.BASE_URL?.trim() || 'https://restful-booker.herokuapp.com',
     extraHTTPHeaders: {
       Accept: 'application/json',
     },

@@ -3,6 +3,13 @@ import { AuthApi } from './clients/AuthApi';
 import { Booking, BookingApi } from './clients/BookingAPI';
 import { createBookingData } from './data/bookingFactory';
 
+const env = (globalThis as typeof globalThis & {
+    process?: { env?: Record<string, string | undefined> };
+}).process?.env ?? {};
+
+const authUsername = env.AUTH_USERNAME || 'admin';
+const authPassword = env.AUTH_PASSWORD || 'password123';
+
 export type BookingFixture = {
     api: BookingApi;
     booking: Booking;
@@ -14,6 +21,7 @@ export type BookingFixture = {
 type TestFixtures = {
     authApi: AuthApi;
     bookingApi: BookingApi;
+    authCredentials: { username: string; password: string };
     authToken: string;
     bookingFixture: BookingFixture;
 };
@@ -25,8 +33,11 @@ export const test = base.extend<TestFixtures>({
     bookingApi: async ({ request }, use) => {
         await use(new BookingApi(request));
     },
-    authToken: async ({ authApi }, use) => {
-        await use(await authApi.createToken('admin', 'password123'));
+    authCredentials: async ({}, use) => {
+        await use({ username: authUsername, password: authPassword });
+    },
+    authToken: async ({ authApi, authCredentials }, use) => {
+        await use(await authApi.createToken(authCredentials.username, authCredentials.password)); // Isso vai na .env
     },
     bookingFixture: async ({ bookingApi, authToken }, use) => {
         const booking = createBookingData();
